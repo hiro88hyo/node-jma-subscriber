@@ -14,8 +14,10 @@ exports.handler = function(event, context) {
       break;
     case "POST":
       var json = JSON.parse(xml2json.toJson(event['body']));
-      var entry = json['feed']['entry'][0];
-      var updated = new Date(Date.parse(entry['updated']));
+      console.log(JSON.stringify(json, null, 2));
+      var entry = json['feed']['entry'];
+      entry = Array.isArray(entry)?entry[0]:entry;
+      var updated = new Date(Date.parse(json['feed']['updated']));
       var content = moment(updated).tz('Asia/Tokyo')
                     .format('YYYY/MM/DD HH:mm:ss') + 
                     '\n' +
