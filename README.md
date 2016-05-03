@@ -28,7 +28,21 @@
   - PushbulletのAccess Tokenを取得しておく
   - AWS CLIが使えるようにしておく(CLIユーザーには**iam:PassRole**と**lambda:UpdateFunctionCode**の許可が必要)
 
-2. API Gatewayの作成
+2. Lambda関数の作成
+    - 関数名は「jma-subscriber」、Descriptionを`{"pushbullet_key":"YOUR_ACCESS_TOKEN"}`とする。（Lambdaが環境変数を扱えないため）
+    - Runtimeは**Node.js 4.3**、Memoryは128MBで十分、Timeoutは10秒くらいでいいと思う
+    - ロール（Basic Execution Roleにしたなら**lambda_basic_execution**のはず）には**iam:PassRole**と**lambda:GetFunctionConfiguration**の許可しておく
+
+3. Lambda関数のアップロード
+      ```
+      $ git clone https://github.com/hiro88hyo/node-jma-subscriber.git
+      $ cd node-jma-subscriber
+      $ npm install
+      $ npm run build
+      $ npm run publish
+      ```
+
+4. API Gatewayの作成
   - リソースは作っても作らなくてもいい
   - メソッド**GET**の作成。Lambda関数は`jma-subscriber`、統合リクエストのマッピングテンプレート`application/json`に以下を指定
 
@@ -55,20 +69,6 @@
     `{"body" : $input.json('$')}`
 
   - APIをデプロイするとEndpointのURLが作られるのでメモしておく、このアドレスを気象庁へメールする。
-
-3. Lambda関数の作成
-  - 関数名は「jma-subscriber」、Descriptionを`{"pushbullet_key":"YOUR_ACCESS_TOKEN"}`とする。（Lambdaが環境変数を扱えないため）
-  - Runtimeは**Node.js 4.3**、Memoryは128MBで十分、Timeoutは10秒くらいでいいと思う
-  - ロール（Basic Execution Roleにしたなら**lambda_basic_execution**のはず）には**iam:PassRole**と**lambda:GetFunctionConfiguration**の許可しておく
-
-4. Lambda関数のアップロード
-    ```
-    $ git clone https://github.com/hiro88hyo/node-jma-subscriber.git
-    $ cd node-jma-subscriber
-    $ npm install
-    $ npm run build
-    $ npm run publish
-    ```
 
 ## その他
 
