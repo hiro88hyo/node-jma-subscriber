@@ -43,9 +43,10 @@
 
   - 統合レスポンスのコード200のマッピングテンプレートを「text/plain」に変更して、以下を指定。
 
-    `#set($allParams = $input.params())
-     #set($query = $allParams.get('querystring'))
-     $util.escapeJavaScript($query.get('hub.challenge'))`
+    #set($allParams = $input.params())
+    #set($query = $allParams.get('querystring'))
+    $util.escapeJavaScript($query.get('hub.challenge'))
+
   - メソッド**POST**の作成。Lambda関数は「jma-subscriber」、統合リクエストのマッピングテンプレート「application/atom+xml」に以下を指定
 
     `{"body" : $input.json('$')}`
