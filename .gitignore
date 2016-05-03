@@ -3,3 +3,7 @@
 /node_modules/
 .env
 
+LambdaExecRolePolicy.json
+LambdaExecTrustRelationship.json
+script/create_iam_role.js
+script/create_lambda_function.js
