@@ -1,0 +1,9 @@
+{
+  "region": "ap-northeast-1",
+  "description": "",
+  "role": "arn:aws:iam::375678526167:role/lambda_basic_execution",
+  "memorySize": "128",
+  "timeout": "30",
+  "handlerFile": "index",
+  "handlerMethod": "handler"
+}

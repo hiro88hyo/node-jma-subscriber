@@ -1,0 +1,5 @@
+/.git/
+/pkg/
+/node_modules/
+.env
+
