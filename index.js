@@ -16,7 +16,8 @@ exports.handler = function(event, context) {
             var json = JSON.parse(xml2json.toJson(event['body']));
             var entry = json['feed']['entry'][0];
             var updated = new Date(Date.parse(entry['updated']));
-            var content = moment(updated).tz('Asia/Tokyo').format('YYYY/MM/DD HH:mm:ss') + '\n' + entry['content']['$t'];
+            var content = moment(updated).tz('Asia/Tokyo').format('YYYY/MM/DD HH:mm:ss') + 
+                          '\n' + entry['content']['$t'];
 
             lambda.getFunctionConfiguration({FunctionName:context.functionName},function(err,result){
               pushbullet_access_token = JSON.parse(result.Description)['pushbullet_key'];
