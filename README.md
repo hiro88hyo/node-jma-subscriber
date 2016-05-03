@@ -25,45 +25,50 @@
 ## Installation
 
 1. 事前作業
-
   - PushbulletのAccess Tokenを取得しておく
   - AWS CLIが使えるようにしておく(CLIユーザーには**iam:PassRole**と**lambda:UpdateFunctionCode**の許可が必要)
 
-1. API Gatewayの作成
+2. API Gatewayの作成
   - リソースは作っても作らなくてもいい
-  - メソッド**GET**の作成。Lambda関数は「jma-subscriber」、統合リクエストのマッピングテンプレート「application/json」に以下を指定
+  - メソッド**GET**の作成。Lambda関数は`jma-subscriber`、統合リクエストのマッピングテンプレート`application/json`に以下を指定
 
-    `{
-       "hub.verify_token": "$input.params('hub.verify_token')",
-       "hub.challenge": "$input.params('hub.challenge')",
-       "hub.topic": "$input.params('hub.topic')",
-       "hub.mode": "$input.params('hub.mode')",
-       "hub.lease_seconds": "$input.params('hub.lease_seconds')"
-    }`
+    ```javascript
+    {
+      "hub.verify_token": "$input.params('hub.verify_token')",
+      "hub.challenge": "$input.params('hub.challenge')",
+      "hub.topic": "$input.params('hub.topic')",
+      "hub.mode": "$input.params('hub.mode')",
+      "hub.lease_seconds": "$input.params('hub.lease_seconds')"
+    }
+    ```
 
-  - 統合レスポンスのコード200のマッピングテンプレートを「text/plain」に変更して、以下を指定。
+  - 統合レスポンスのコード200のマッピングテンプレートを`text/plain`に変更して、以下を指定。
 
+    ```
     #set($allParams = $input.params())
     #set($query = $allParams.get('querystring'))
     $util.escapeJavaScript($query.get('hub.challenge'))
+    ```
 
-  - メソッド**POST**の作成。Lambda関数は「jma-subscriber」、統合リクエストのマッピングテンプレート「application/atom+xml」に以下を指定
+  - メソッド**POST**の作成。Lambda関数は`jma-subscriber`、統合リクエストのマッピングテンプレート`application/atom+xml`に以下を指定
 
     `{"body" : $input.json('$')}`
+
   - APIをデプロイするとEndpointのURLが作られるのでメモしておく、このアドレスを気象庁へメールする。
 
-1. Lambda関数の作成
-  - 関数名は「jma-subscriber」、Descriptionを`{{"pushbullet_key":"YOUR_ACCESS_TOKEN"}}`とする。（Lambdaが環境変数を扱えないため）
+3. Lambda関数の作成
+  - 関数名は「jma-subscriber」、Descriptionを`{"pushbullet_key":"YOUR_ACCESS_TOKEN"}`とする。（Lambdaが環境変数を扱えないため）
   - Runtimeは**Node.js 4.3**、Memoryは128MBで十分、Timeoutは10秒くらいでいいと思う
   - ロール（Basic Execution Roleにしたなら**lambda_basic_execution**のはず）には**iam:PassRole**と**lambda:GetFunctionConfiguration**の許可しておく
 
-1. Lambda関数のアップロード
-
+4. Lambda関数のアップロード
+    ```
     $ git clone https://github.com/hiro88hyo/node-jma-subscriber.git
     $ cd node-jma-subscriber
     $ npm install
     $ npm run build
     $ npm run publish
+    ```
 
 ## その他
 
