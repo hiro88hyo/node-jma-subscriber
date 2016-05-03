@@ -74,6 +74,10 @@
 
   - subscriberの構築ついては[ここ](http://xml.kishou.go.jp/open_trial/detailinformation.pdf)に記載があります
   - 通知にはPushbulletを使っていますが、LINEなりtwitterなりにもできると思います
+  - どうせなら準備も含め自動でやればいいんだけどそのうちやる
+
+## TODO
+  - 通知のフィルタ
 
 ## License
 
